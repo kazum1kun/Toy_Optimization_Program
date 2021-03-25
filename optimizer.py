@@ -1,5 +1,5 @@
-import sympy as sp
 import numpy as np
+import sympy as sp
 
 
 class Optimizer:
@@ -10,6 +10,7 @@ class Optimizer:
         self.num_variables = len(self.variables)
 
         # Create partial derivatives (gradients) based on the function
+        self.orig_gradient = [f.diff(var) for var in self.variables]
         self.gradient = [sp.lambdify(var, f.diff(var), modules='numpy') for var in self.variables]
 
         # Create lambda-fied version of f so it can be used as an function
@@ -70,7 +71,7 @@ class Optimizer:
 
         # Initialize the counter and update output with data from iteration 0
         itr = 0
-        output_data.append([itr, *x, self.f(*x), gradient_norm, np.inf])
+        output_data.append([itr, *x, self.f(*x), gradient_norm, 'N/A'])
 
         # Main optimization routine
         while gradient_norm > stop_condition:
@@ -106,8 +107,8 @@ class Optimizer:
             return -gradient
         elif strategy == 'newton':
             # Create Hessian of the objective function. The Hessian is simply the Jacobian of the gradient
-            hessian: sp.Matrix = sp.Matrix(self.gradient).jacobian(self.variables)
-            return -hessian.inv().multiply(gradient)
+            hessian = np.array(sp.Matrix(self.orig_gradient).jacobian(self.variables), dtype='float64')
+            return -np.linalg.inv(hessian).__matmul__(gradient)
 
     # Check the parameters passed into the optimize function and make sure they are legal
     def _check_params(self, starting_point, stop_condition, alpha, beta, search_strategy):

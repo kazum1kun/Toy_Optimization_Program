@@ -1,6 +1,5 @@
-import sympy as sp
-import numpy as np
 from tabulate import tabulate
+
 from optimizer import Optimizer
 
 
@@ -9,7 +8,7 @@ def main():
     problem = Optimizer('100 * x1**2 + x2**2')
 
     # Run optimization with the specified parameters
-    result = problem.optimize([10, 1], 10**-8, 0.2, 0.5)
+    result = problem.optimize([10, 1], 10 ** -8, 0.2, 0.5, search_strategy='newton')
 
     print_output(result, problem.variables)
 
