@@ -95,7 +95,7 @@ class Optimizer:
 
         print(f'Optimizer successfully finished after {itr} iterations.\n'
               f'alpha: {alpha}, beta: {beta}, strategy: {search_strategy}\n'
-              f'starting point: {starting_point}, stopping condition: <= {stop_condition}\n'
+              f'starting point: {starting_point}, stopping condition: norm <= {stop_condition}\n'
               f'The result is {self.f(*x)} at {x}\n')
 
         return output_data
