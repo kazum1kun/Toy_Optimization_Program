@@ -3,10 +3,10 @@ import numpy as np
 
 
 class Optimizer:
-    def __init__(self, obj_fn: str):
+    def __init__(self, obj_function: str):
         # Create the objective function and obtain its variables
-        f: sp.Function = sp.parse_expr(obj_fn)
-        self.variables = f.free_symbols
+        f: sp.Function = sp.parse_expr(obj_function)
+        self.variables = sorted(f.free_symbols, key=lambda var: var.name)
         self.num_variables = len(self.variables)
 
         # Create partial derivatives (gradients) based on the function
@@ -14,6 +14,7 @@ class Optimizer:
 
         # Create lambda-fied version of f so it can be used as an function
         self.f = sp.lambdify(self.variables, f, modules='numpy')
+        self.orig_f = f
 
         # Default to steepest descent strategy
         self.strategy = 'steepest'
@@ -56,21 +57,20 @@ class Optimizer:
         self._check_params(starting_point, stop_condition, alpha, beta, search_strategy)
 
         print('Optimization starting!\n'
-              f'The objective function is: {self.f}\n'
-              f'The free variable(s) are: {self.variables}\n'
-              f'The gradient function(s) are: {self.gradient}\n')
+              f'The objective function is: {self.orig_f}\n'
+              f'The free variable(s) are: {self.variables}\n')
 
         # Initialize output data structure
         output_data = []
 
         # Initialize gradient at the starting point and calculate the norm of the gradient
-        gradient_x = np.array([x_prime(x_val) for (x_prime, x_val) in (self.gradient, starting_point)])
+        gradient_x = np.array([x_prime(x_val) for x_prime, x_val in zip(self.gradient, starting_point)])
         gradient_norm = gradient_x.dot(gradient_x)
         x = starting_point
 
         # Initialize the counter and update output with data from iteration 0
         itr = 0
-        output_data.append([itr, x, self.f(*x), gradient_norm, np.inf])
+        output_data.append([itr, *x, self.f(*x), gradient_norm, np.inf])
 
         # Main optimization routine
         while gradient_norm > stop_condition:
@@ -86,14 +86,16 @@ class Optimizer:
             x = x + t * search_dir
 
             # Gradient that's evaluated at a particular (x1, x2)
-            gradient_x = np.array([x_prime(x_val) for (x_prime, x_val) in (self.gradient, x)])
+            gradient_x = np.array([x_prime(x_val) for x_prime, x_val in zip(self.gradient, x)])
             # Calculate the norm of the function
-            nabla_norm = gradient_x.dot(gradient_x)
+            gradient_norm = gradient_x.dot(gradient_x)
 
-            output_data.append([itr, x, self.f(*x), nabla_norm, t])
+            output_data.append([itr, *x, self.f(*x), gradient_norm, t])
 
         print(f'Optimizer successfully finished after {itr} iterations.\n'
-              f'The result is {self.f(*x)} at {x}')
+              f'alpha: {alpha}, beta: {beta}, strategy: {search_strategy}\n'
+              f'starting point: {starting_point}, stopping condition: <= {stop_condition}\n'
+              f'The result is {self.f(*x)} at {x}\n')
 
         return output_data
 
