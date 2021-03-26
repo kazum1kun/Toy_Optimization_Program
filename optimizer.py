@@ -77,7 +77,7 @@ class Optimizer:
         while gradient_norm > stop_condition:
             itr += 1
             # Update the search direction
-            search_dir = self._calc_descent_dir(gradient_x, search_strategy)
+            search_dir = self._calc_descent_dir(gradient_x, x, search_strategy)
 
             # Calculate step size using Armijo rule
             t = 1
@@ -103,13 +103,19 @@ class Optimizer:
         return output_data, output_log
 
     # Return the descent direction based on the given strategy
-    def _calc_descent_dir(self, gradient, strategy):
+    def _calc_descent_dir(self, gradient, x, strategy):
         # The steepest descent is simply the negative of its gradient at current location
         if strategy == 'steepest':
             return -gradient
         elif strategy == 'newton':
             # Create Hessian of the objective function. The Hessian is simply the Jacobian of the gradient
-            hessian = np.array(sp.Matrix(self.orig_gradient).jacobian(self.variables), dtype='float64')
+            hessian = np.array(sp.Matrix(self.orig_gradient).jacobian(self.variables))
+
+            # Evaluate the hessian, if applicable
+            for i in range(0, self.num_variables):
+                hessian.flat[i] = hessian.flat[i].subs(self.variables[i], x[i])
+            hessian = hessian.astype('float64')
+
             return -np.linalg.inv(hessian).__matmul__(gradient)
 
     # Check the parameters passed into the optimize function and make sure they are legal

@@ -1,13 +1,21 @@
-import os
-
 from tabulate import tabulate
 
 from optimizer import Optimizer
 
 
 def main():
-    objective = '100 * x1**2 + x2**2'
-    starting_points = [[10, 1], [1, 10], [5, 5], [10, 0], [0, 10]]
+    # q1
+    # objective = '100 * x1**2 + x2**2'
+    # starting_points = [[10, 1], [1, 10], [5, 5], [10, 0], [0, 10]]
+    # q2
+    # objective = 'x1**2 + x2**2'
+    # starting_points = [[10, 1], [1, 10], [5, 5], [10, 0], [0, 10]]
+    # q3
+    # objective = 'x**4 - 13*x**2 + 36'
+    # starting_points = [[-2], [1.5], [0]]
+    # q4
+    objective = 'x**3 - x**2'
+    starting_points = [[0.8], [0.1], [-2]]
     strategies = ['steepest', 'newton']
     alpha = 0.2
     beta = 0.5
@@ -19,7 +27,7 @@ def main():
     for strategy in strategies:
         for starting_point in starting_points:
             result, log = problem.optimize(starting_point, 10 ** -8, alpha, beta, search_strategy=strategy)
-            file_name = f'q1-({starting_point[0]}, {starting_point[1]})-{alpha}-{beta}-{strategy}'
+            file_name = f'q4-({starting_point[0]})-{alpha}-{beta}-{strategy}'
             save_output(result, problem.variables, log, file_name)
 
 
