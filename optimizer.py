@@ -17,9 +17,6 @@ class Optimizer:
         self.f = sp.lambdify(self.variables, f, modules='numpy')
         self.orig_f = f
 
-        # Default to steepest descent strategy
-        self.strategy = 'steepest'
-
     '''
     Perform the optimization
     
@@ -56,10 +53,13 @@ class Optimizer:
 
     def optimize(self, starting_point, stop_condition, alpha, beta, search_strategy='steepest'):
         self._check_params(starting_point, stop_condition, alpha, beta, search_strategy)
+        output_log = []
 
-        print('Optimization starting!\n'
-              f'The objective function is: {self.orig_f}\n'
-              f'The free variable(s) are: {self.variables}\n')
+        temp = ('Optimization starting!\n'
+                f'The objective function is: {self.orig_f}\n'
+                f'The free variable(s) are: {self.variables}\n')
+        print(temp)
+        output_log.append(temp)
 
         # Initialize output data structure
         output_data = []
@@ -93,12 +93,14 @@ class Optimizer:
 
             output_data.append([itr, *x, self.f(*x), gradient_norm, t])
 
-        print(f'Optimizer successfully finished after {itr} iterations.\n'
-              f'alpha: {alpha}, beta: {beta}, strategy: {search_strategy}\n'
-              f'starting point: {starting_point}, stopping condition: norm <= {stop_condition}\n'
-              f'The result is {self.f(*x)} at {x}\n')
+        temp = (f'Optimizer successfully finished after {itr} iterations.\n'
+                f'alpha: {alpha}, beta: {beta}, strategy: {search_strategy}\n'
+                f'starting point: {starting_point}, stopping condition: norm <= {stop_condition}\n'
+                f'The result is {self.f(*x)} at {x}\n')
+        print(temp)
+        output_log.append(temp)
 
-        return output_data
+        return output_data, output_log
 
     # Return the descent direction based on the given strategy
     def _calc_descent_dir(self, gradient, strategy):
