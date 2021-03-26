@@ -1,0 +1,16 @@
+Optimization starting!
+The objective function is: x1**4 - 10*x1**2 + x1 + 5*x2**2 + x2 + x3**2 - x3
+The free variable(s) are: [x1, x2, x3]
+
+Optimizer successfully finished after 1 iterations.
+alpha: 0.2, beta: 0.5, strategy: steepest
+starting point: [5, 5, 5], stopping condition: norm <= 1e-08
+The result is -1180103922 at [-396  -46   -4]
+
+╒═════╤══════╤══════╤══════╤══════════════╤═════════════════╤═════╕
+│   k │   x1 │   x2 │   x3 │         f(x) │            norm │ t   │
+╞═════╪══════╪══════╪══════╪══════════════╪═════════════════╪═════╡
+│   0 │    5 │    5 │    5 │ 530          │ 163483          │ N/A │
+├─────┼──────┼──────┼──────┼──────────────┼─────────────────┼─────┤
+│   1 │ -396 │  -46 │   -4 │  -1.1801e+09 │     -8.1825e+08 │ 1   │
+╘═════╧══════╧══════╧══════╧══════════════╧═════════════════╧═════╛

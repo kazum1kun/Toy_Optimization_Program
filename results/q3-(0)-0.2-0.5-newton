@@ -1,0 +1,14 @@
+Optimization starting!
+The objective function is: x**4 - 13*x**2 + 36
+The free variable(s) are: [x]
+
+Optimizer successfully finished after 0 iterations.
+alpha: 0.2, beta: 0.5, strategy: newton
+starting point: [0], stopping condition: norm <= 1e-08
+The result is 36 at [0]
+
+╒═════╤═════╤════════╤════════╤═════╕
+│   k │   x │   f(x) │   norm │ t   │
+╞═════╪═════╪════════╪════════╪═════╡
+│   0 │   0 │     36 │      0 │ N/A │
+╘═════╧═════╧════════╧════════╧═════╛
